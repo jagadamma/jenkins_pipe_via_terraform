@@ -1,0 +1,43 @@
+pipeline
+{
+    agent any
+    stages
+    {
+        stage('build')
+        {
+            steps{
+             git branch: 'abi', credentialsId: '571d04a0-2e0b-4221-9b75-909ec8d3de84', url: 'https://github.com/tx-talocity/hot-chocolate.git'
+                }
+        }  
+        stage('terraform Init') {
+            steps{
+              dir('JDApis'){
+                   sh 'terraform init'
+                }   
+            }
+        }
+        stage('terraform apply') {
+            steps{
+              dir('JDApis'){  
+                sh 'terraform ${action} --auto-approve'
+              }
+            }
+            
+        }
+        
+         stage('build image')
+        {
+            steps{
+              dir('JDApis'){
+                sh "docker build -t jagadamma/new ."
+              }    
+            }
+        }        
+        stage('push image')
+        {
+            steps{
+                sh "docker login -u jagadamma -p abilashp@1994"
+                sh "docker push jagadamma/new"
+        }    }
+    }
+}
