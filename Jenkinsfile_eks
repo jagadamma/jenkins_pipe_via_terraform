@@ -1,0 +1,34 @@
+pipeline
+{
+    agent any
+    stages
+    {
+        stage('build')
+        {
+            steps{
+             git branch: 'main', credentialsId: '2dea2ddb-cec1-47ff-be6f-a3e429435ae2', url: 'https://github.com/Nihals-talocity/eks.git'
+                }
+        }
+        stage('terraform Init') {
+            steps{
+             
+                   sh 'terraform init'
+                
+            }
+        }
+        stage('terraform apply') {
+            steps{
+             withCredentials([[
+                 $class: 'AmazonWebServicesCredentialsBinding',
+                 credentialsId: 'abi',
+                 accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                 secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) 
+                 {
+                   sh 'terraform ${action} --auto-approve'
+                 }
+              
+            }
+        }
+         
+    }
+}
