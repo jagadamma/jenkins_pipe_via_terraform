@@ -1,7 +1,7 @@
 resource "aws_lb_target_group" "tg" {
   name        = "TargetGroup"
   port        = 8080
-  protocol    = "TCP"
+  protocol    = "HTTP"
   vpc_id      = aws_vpc.vpc.id
   target_type = "instance"
 
