@@ -13,3 +13,6 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_alarm" {
   dimensions = {
     InstanceId = aws_instance.my.id
   }
+  
+  alarm action = ["arn:aws:automate:ap-south-1:ec2:stop']
+}
